@@ -1,0 +1,1 @@
+"C:\Program Files\Python310\python.exe" D:/legalize/llvm/llvm-project/build/Debug/bin/llvm-lit.py -sv --no-progress-bar --param build_mode=Debug D:/legalize/llvm/llvm-project/build/tools/clang/tools/extra/test/clang-tidy/checkers/modernize-macro-to-enum.cpp
