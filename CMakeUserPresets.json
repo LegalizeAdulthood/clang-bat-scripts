@@ -1,0 +1,156 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "sphinx",
+      "hidden": true,
+      "description": "Enable sphinx for building documentation",
+      "cacheVariables": {
+        "LLVM_ENABLE_SPHINX": true,
+        "SPHINX_EXECUTABLE": "$env{SPHINX}"
+      }
+    },
+    {
+      "name": "sibling-build-preset",
+      "hidden": true,
+      "description": "Use a sibling directory for the build based on the preset name",
+      "binaryDir": "${sourceDir}/../../build-${presetName}"
+    },
+    {
+      "name": "x86-target",
+      "hidden": true,
+      "description": "Only target x86 back end",
+      "cacheVariables": {
+        "LLVM_TARGETS_TO_BUILD": "X86"
+      }
+    },
+    {
+      "name": "install-build-dir",
+      "hidden": true,
+      "installDir": "${sourceDir}/../../build-${presetName}/install"
+    },
+    {
+      "name": "clang-tools-extra",
+      "hidden": true,
+      "description": "Enable projects clang, clang-tools-extra",
+      "cacheVariables": {
+        "LLVM_ENABLE_PROJECTS": "clang;clang-tools-extra"
+      }
+    },
+    {
+      "name": "compile-commands",
+      "hidden": true,
+      "description": "Generate a compile_commands.json database",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
+    },
+    {
+      "name": "no-testing",
+      "hidden": true,
+      "description": "Turn off building of tests",
+      "cacheVariables": {
+        "BUILD_TESTING": false
+      }
+    },
+    {
+      "name": "include-what-you-use",
+      "hidden": true,
+      "cacheVariables": {
+        "LLVM_EXTERNAL_PROJECTS": "iwyu",
+        "LLVM_EXTERNAL_IWYU_SOURCE_DIR": "${sourceDir}/../../include-what-you-use"
+      }
+    },
+    {
+      "name": "common-settings",
+      "hidden": true,
+      "inherits": [ "sibling-build-preset", "x86-target", "clang-tools-extra" ]
+    },
+    {
+      "name": "tidy",
+      "displayName": "Configure with x86 back end, clang-tools-extra",
+      "inherits": [ "common-settings" ]
+    },
+    {
+      "name": "iwyu",
+      "displayName": "Configure with x86 back end, clang-tools-extra, Include What You Use",
+      "inherits": [ "common-settings", "include-what-you-use", "install-build-dir" ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "tidy",
+      "displayName": "Build with default settings",
+      "configurePreset": "tidy"
+    },
+    {
+      "name": "iwyu",
+      "displayName": "Build with Include What You Use settings",
+      "configurePreset": "iwyu"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "settings",
+      "hidden": true,
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "tidy",
+      "displayName": "Test with default settings",
+      "configurePreset": "tidy",
+      "inherits": [ "settings" ]
+    },
+    {
+      "name": "iwyu",
+      "displayName": "Test with Include What You Use settings",
+      "configurePreset": "iwyu",
+      "inherits": [ "settings" ]
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "tidy",
+      "displayName": "Workflow with default settings: configure, build and test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "tidy"
+        },
+        {
+          "type": "build",
+          "name": "tidy"
+        },
+        {
+          "type": "test",
+          "name": "tidy"
+        }
+      ]
+    },
+    {
+      "name": "iwyu",
+      "displayName": "Workflow with Include What You Use settings: configure, build and test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "iwyu"
+        },
+        {
+          "type": "build",
+          "name": "iwyu"
+        },
+        {
+          "type": "test",
+          "name": "iwyu"
+        }
+      ]
+    }
+  ]
+}
