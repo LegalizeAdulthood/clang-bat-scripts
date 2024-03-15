@@ -16,6 +16,12 @@
       }
     },
     {
+      "name": "gen-ninja",
+      "hidden": true,
+      "description": "Use Ninja Multi-Config generator",
+      "generator": "Ninja Multi-Config"
+    },
+    {
       "name": "sibling-build-preset",
       "hidden": true,
       "description": "Use a sibling directory for the build based on the preset name",
