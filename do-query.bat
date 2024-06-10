@@ -1,1 +1,1 @@
-clang-query --preload D:\legalize\llvm\test\preload.txt %*
+clang-query --preload D:\legalize\clang\test\preload.txt %*
