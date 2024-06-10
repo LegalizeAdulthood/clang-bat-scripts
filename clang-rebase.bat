@@ -9,4 +9,3 @@ pause
 git rebase --continue
 if errorlevel 1 goto :again
 exit /b 0
-
