@@ -41,7 +41,15 @@
       "installDir": "${sourceDir}/../../build-${presetName}/install"
     },
     {
-      "name": "clang-tools-extra",
+      "name": "project-clang",
+      "hidden": true,
+      "description": "Enable projects clang",
+      "cacheVariables": {
+        "LLVM_ENABLE_PROJECTS": "clang"
+      }
+    },
+    {
+      "name": "project-clang-tools-extra",
       "hidden": true,
       "description": "Enable projects clang, clang-tools-extra",
       "cacheVariables": {
@@ -75,29 +83,53 @@
     {
       "name": "common-settings",
       "hidden": true,
-      "inherits": [ "sibling-build-preset", "x86-target", "clang-tools-extra" ]
+      "inherits": [ "sibling-build-preset", "x86-target" ]
     },
     {
       "name": "tidy",
       "displayName": "Configure with x86 back end, clang-tools-extra",
-      "inherits": [ "common-settings" ]
+      "inherits": [ "project-clang-tools-extra", "common-settings" ]
+    },
+    {
+      "name": "ctest",
+      "displayName": "Configure with x86 back end, clang-tools-extra",
+      "inherits": [ "tidy" ]
     },
     {
       "name": "iwyu",
       "displayName": "Configure with x86 back end, clang-tools-extra, Include What You Use",
-      "inherits": [ "common-settings", "include-what-you-use", "install-build-dir" ]
+      "inherits": [ "project-clang", "include-what-you-use", "install-build-dir", "common-settings" ]
     }
   ],
   "buildPresets": [
     {
+      "name": "ctest",
+      "displayName": "Build with default settings",
+      "configurePreset": "ctest",
+      "jobs": 32,
+      "targets": [
+        "ClangdTests",
+        "ClangApplyReplacementsTests",
+        "ClangChangeNamespaceTests",
+        "ClangDocTests",
+        "ClangIncludeFixerTests",
+        "FindAllSymbolsTests",
+        "ClangMoveTests",
+        "ClangQueryTests",
+        "ClangTidyTests"
+      ]
+    },
+    {
       "name": "tidy",
       "displayName": "Build with default settings",
-      "configurePreset": "tidy"
+      "configurePreset": "tidy",
+      "targets": "clang-tidy"
     },
     {
       "name": "iwyu",
       "displayName": "Build with Include What You Use settings",
-      "configurePreset": "iwyu"
+      "configurePreset": "iwyu",
+      "targets": "include-what-you-use"
     }
   ],
   "testPresets": [
@@ -106,6 +138,9 @@
       "hidden": true,
       "output": {
         "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 32
       }
     },
     {
@@ -113,6 +148,12 @@
       "displayName": "Test with default settings",
       "configurePreset": "tidy",
       "inherits": [ "settings" ]
+    },
+    {
+      "name": "ctest",
+      "displayName": "Test with default settings",
+      "configurePreset": "ctest",
+      "inherits": [ "tidy" ]
     },
     {
       "name": "iwyu",
@@ -137,6 +178,24 @@
         {
           "type": "test",
           "name": "tidy"
+        }
+      ]
+    },
+    {
+      "name": "ctest",
+      "displayName": "Workflow with default settings: configure, build and test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ctest"
+        },
+        {
+          "type": "build",
+          "name": "ctest"
+        },
+        {
+          "type": "test",
+          "name": "ctest"
         }
       ]
     },
