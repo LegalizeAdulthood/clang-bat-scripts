@@ -144,16 +144,10 @@
       }
     },
     {
-      "name": "tidy",
-      "displayName": "Test with default settings",
-      "configurePreset": "tidy",
-      "inherits": [ "settings" ]
-    },
-    {
       "name": "ctest",
       "displayName": "Test with default settings",
       "configurePreset": "ctest",
-      "inherits": [ "tidy" ]
+      "inherits": [ "settings" ]
     },
     {
       "name": "iwyu",
@@ -173,10 +167,6 @@
         },
         {
           "type": "build",
-          "name": "tidy"
-        },
-        {
-          "type": "test",
           "name": "tidy"
         }
       ]
